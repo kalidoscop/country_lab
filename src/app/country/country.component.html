@@ -1,0 +1,116 @@
+<div
+  class="z-10 w-full h-full flex justify-center items-center fixed top-0 left-0"
+>
+  @if(selectedCountry){ @if (selectedCountry.coatOfArms.png) {
+  <img
+    (load)="onImageLoad()"
+    src="{{ selectedCountry.coatOfArms.png }}"
+    alt=""
+    class="h-5/6"
+  />
+
+  }@else {
+    <img
+    (load)="onImageLoad()"
+    src="{{ selectedCountry.flags.png }}"
+    alt=""
+    class="w-9/12"
+  />
+  } }
+</div>
+<div class="z-20 fixed top-0 left-0 bg-gray-100 opacity-50 w-full h-full"></div>
+
+<div class="w-full h-full fixed flex flex-col justify-start items-center z-20">
+  <div
+    class="z-10 fixed -top-20 -left-20 rounded-full transition-all w-52 h-52"
+    [ngClass]="{
+      'w-[200%] h-[200%] -top-56 -left-56 lg:-top-80 lg:-left-80 z-30 bg-gray-100 shadow-xl': loading == true
+    }"
+  ></div>
+  <div
+    class="w-4/5 min-h-32 lg:h-60 flex flex-col justify-start items-center mt-10 text-gray-900 z-20"
+  >
+    @if(selectedCountry){
+    <div
+      class="w-full lg:justify-center lg:items-center flex transition lg:gap-4"
+    >
+      <img
+        src="{{ selectedCountry.flags.png }}"
+        (load)="onImageLoad()"
+        class="h-20 lg:h-2/3 rounded-lg shadow-lg"
+        alt=""
+      />
+      @if (allImagesLoaded) {
+      <div
+        class="h-full w-2/3 p-2 rounded-lg shadow-lg ml-2 flex flex-col bg-white lg:justify-center lg:text-xl"
+      >
+        <a href="{{ selectedCountry.maps.googleMaps }}" class="font-bold">{{
+          selectedCountry.translations.fra.common
+        }}</a>
+        <a
+          [href]="[
+            'https://www.google.com/maps?q=' +
+              [
+                selectedCountry.capitalInfo.latlng[0],
+                selectedCountry.capitalInfo.latlng[0]
+              ]
+          ]"
+          >{{ selectedCountry.capital[0] }}</a
+        >
+        <p>
+          {{ selectedCountry.cca2 }} {{ selectedCountry.idd?.root || ""
+          }}{{ selectedCountry.idd?.suffixes?.[0] || '' }}
+        </p>
+        <p>{{ selectedCountry.population }} habitant</p>
+        <p>{{ selectedCountry.timezones[0] }}</p>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  <div
+    class="w-4/5 min-h-28 flex flex-col justify-start items-center gap-4 z-40"
+  >
+    <div
+      class="mt-5 w-full h-12 lg:w-4/6 lg:h-14 p-2 border-[1px] bg-white shadow-lg border-gray-300 rounded-lg flex justify-between items-center"
+    >
+      <input
+        class="h-full w-10/12 lg:w-11/12 outline-none text-gray-500"
+        placeholder="Search your country"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="filteredCountries()"
+      />
+      <button
+        class="w-6 h-6 bg-gray-200 flex justify-center items-center rounded-full"
+      >
+        <span
+          class="material-symbols-outlined text-sm text-gray-500"
+          (click)="clean()"
+        >
+          close
+        </span>
+      </button>
+    </div>
+    <ul
+      class="w-full lg:w-4/6 min-h-10 max-h-80 overflow-auto flex flex-wrap 300 rounded-lg transition shadow-lg"
+    >
+      @for (country of filteredCountries(); track $index) {
+
+      <li
+        class="w-full h-10 lg:h-14 border-b-[1px] border-gray-300 bg-white "
+        
+      >
+      <button class="w-full h-full flex justify-start items-center pl-2 gap-2 hover:bg-gray-100 transition" (click)="selectCountry(country)">
+        <span>{{ country.flag }}</span>
+        <span
+          >{{ country.translations.fra.common }} {{ country.idd?.root || ""
+          }}{{ country.idd?.suffixes?.[0] || '' }}</span
+        >
+      </button>
+        
+      </li>
+      }
+    </ul>
+  </div>
+</div>
