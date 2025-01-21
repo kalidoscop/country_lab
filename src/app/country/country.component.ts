@@ -21,7 +21,9 @@ export class CountryComponent implements OnInit {
 
   ngOnInit() {
     this.countryService.getAfricanCountries().subscribe((data) => {
-      this.countries = data;
+      this.countries = data.sort((a, b) =>
+        a.translations.fra.common.localeCompare(b.translations.fra.common)
+      );
     });
   }
 
